@@ -4,50 +4,52 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
-import com.anudipfound.model.User;
+import com.anudipfound.model.Address;
+import com.anudipfound.model.Customer;
+
 
 public class App 
 {
     public static void main( String[] args )
     {
-    	Configuration cfg=new Configuration();
-        cfg.configure("Hibernatecrud.cfg.xml");
-        SessionFactory factory=cfg.buildSessionFactory();
-        Session session=factory.openSession();
-
-           
-           try 
-           {
-        	   //insert values
-        	   for(int i=1;i<=5;i++)
-        	   {
-        		   User u1=new User();
-        		   u1.setName("User Name"+i);
-        		   session.save(u1);
-        	   }
-        	   
-        	   //update details
-        	   User u1=session.get(User.class,5);
-        	   u1.setName("Jagadeeswari");
-        	   session.update(u1);
-        	   
-        	   //retrieve details
-        	   User u2=session.get(User.class, 5);
-        	   System.out.println("User name :"+u2.getName());
-        	   
-        	   //Delete deails
-        	   User u3=session.get(User.class, 4);
-        	   session.delete(u3);
-        			   
-        	   
-           session.beginTransaction();           
-           session.getTransaction().commit();
-           }
-           finally 
-           {
-           	session.close();
-           	factory.close();
-           }   
-
+    	System.out.println("Connection Started");
+		Configuration cfg=new Configuration();
+		cfg.configure("hibernateLab1.cfg.xml");
+		
+		SessionFactory factory=cfg.buildSessionFactory();
+		Session session=factory.openSession();
+		System.out.println(factory);
+		try
+		{
+			Customer cust=new Customer();
+			cust.setName("Jagadeeswari");
+			
+			Address a1=new Address();
+			a1.setAddress("Rajahmundry");
+			a1.setCustomer(cust);
+			
+			Address a2=new Address();
+			a2.setAddress("Hyderbad");
+			a2.setCustomer(cust);
+			
+			session.beginTransaction();
+        	session.save(cust);
+        	session.save(a1);
+        	session.save(a2);
+        	session.getTransaction().commit();
+        	
+			
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			session.close();
+			factory.close();
+		}
+	
+       
     }
 }
